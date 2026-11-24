@@ -1,0 +1,127 @@
+.publish-page {
+  min-height: 100vh;
+}
+
+.publish-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(900px, calc(100% - 40px));
+  min-height: 72px;
+  margin: 0 auto;
+}
+
+.publish-topbar__title {
+  color: #17211d;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.publish-layout {
+  width: min(780px, calc(100% - 40px));
+  margin: 24px auto 0;
+}
+
+.publish-editor {
+  padding: 34px 38px;
+  border: 1px solid #dce3df;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.publish-editor__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #edf0ee;
+}
+
+.publish-editor__eyebrow {
+  color: #1f6b57;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.4px;
+}
+
+.publish-editor__author {
+  color: #57645d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.publish-field {
+  margin-bottom: 22px;
+}
+
+.publish-field--content {
+  margin-bottom: 18px;
+}
+
+.publish-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.publish-count {
+  margin-bottom: 8px;
+  color: #8a948f;
+  font-size: 11px;
+}
+
+.publish-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.publish-textarea {
+  min-height: 300px;
+  border: 0;
+  padding: 8px 0;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.publish-textarea:focus {
+  box-shadow: none;
+}
+
+.publish-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #edf0ee;
+}
+
+.publish-footer__hint {
+  color: #8a948f;
+  font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .publish-topbar {
+    width: calc(100% - 28px);
+    min-height: 62px;
+  }
+
+  .publish-layout {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .publish-editor {
+    min-height: calc(100vh - 62px);
+    padding: 24px 18px;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+  }
+
+  .publish-textarea {
+    min-height: 260px;
+  }
+}

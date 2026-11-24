@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+  DELETED
+}
+
+enum PostStatus {
+  PENDING
+  PUBLISHED
+  HIDDEN
+  DELETED
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  username     String     @unique @db.VarChar(32)
+  passwordHash String     @map("password_hash") @db.VarChar(100)
+  displayName  String     @map("display_name") @db.VarChar(32)
+  avatarUrl    String?    @map("avatar_url") @db.VarChar(255)
+  role         UserRole   @default(USER)
+  status       UserStatus @default(ACTIVE)
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  posts        Post[]
+
+  @@index([status])
+  @@map("users")
+}
+
+model Post {
+  id        Int        @id @default(autoincrement())
+  authorId  Int        @map("author_id")
+  title     String?    @db.VarChar(100)
+  content   String     @db.Text
+  status    PostStatus @default(PUBLISHED)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([authorId, createdAt])
+  @@map("posts")
+}

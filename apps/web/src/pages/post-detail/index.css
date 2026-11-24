@@ -1,0 +1,162 @@
+.detail-page {
+  min-height: 100vh;
+}
+
+.detail-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(860px, calc(100% - 40px));
+  min-height: 72px;
+  margin: 0 auto;
+}
+
+.detail-topbar__title {
+  color: #17211d;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.detail-topbar__spacer {
+  width: 38px;
+  height: 38px;
+}
+
+.detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-delete {
+  color: #a8452d;
+}
+
+.detail-layout {
+  width: min(760px, calc(100% - 40px));
+  margin: 24px auto 0;
+}
+
+.detail-article {
+  padding: 42px 52px 50px;
+  border: 1px solid #dce3df;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.detail-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.detail-author__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-author__name {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.detail-author__meta {
+  color: #87918c;
+  font-size: 12px;
+}
+
+.detail-date {
+  display: block;
+  margin: 28px 0 14px;
+  color: #7d8882;
+  font-size: 12px;
+}
+
+.detail-title {
+  display: block;
+  margin-bottom: 20px;
+  color: #17211d;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.detail-content {
+  display: block;
+  color: #344139;
+  font-size: 16px;
+  line-height: 2;
+  white-space: pre-wrap;
+}
+
+.detail-end {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 46px;
+  color: #a2aaa5;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.detail-end__line {
+  flex: 1;
+  height: 1px;
+  background: #e5e9e7;
+}
+
+.detail-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+  gap: 12px;
+  padding: 32px;
+  border: 1px dashed #cbd4cf;
+  border-radius: 8px;
+  background: #fafcfb;
+  color: #66736c;
+  text-align: center;
+}
+
+.detail-state__title {
+  color: #17211d;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.detail-state__copy {
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .detail-topbar {
+    width: calc(100% - 28px);
+    min-height: 62px;
+  }
+
+  .detail-layout {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .detail-article {
+    min-height: calc(100vh - 62px);
+    padding: 28px 20px 40px;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+  }
+
+  .detail-title {
+    font-size: 28px;
+  }
+
+  .detail-content {
+    font-size: 15px;
+  }
+}

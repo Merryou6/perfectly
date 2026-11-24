@@ -1,0 +1,16 @@
+{
+  "name": "perfectly",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.5.1",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "dev:server": "pnpm --filter @perfectly/server dev",
+    "dev:web": "pnpm --filter @perfectly/web dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "db:generate": "pnpm --filter @perfectly/server db:generate",
+    "db:migrate": "pnpm --filter @perfectly/server db:migrate",
+    "db:seed": "pnpm --filter @perfectly/server db:seed"
+  }
+}
