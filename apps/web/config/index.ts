@@ -22,7 +22,7 @@ export default defineConfig<"webpack5">(async (merge) => {
     outputRoot: "dist",
     defineConstants: {
       __API_BASE__: JSON.stringify(
-        process.env.TARO_APP_API_BASE || "http://localhost:3000/api/v1",
+        process.env.TARO_APP_API_BASE || "http://127.0.0.1:3000/api/v1",
       ),
     },
     framework: "react",
@@ -42,6 +42,10 @@ export default defineConfig<"webpack5">(async (merge) => {
       },
       postcss: {
         autoprefixer: { enable: true, config: {} },
+        pxtransform: {
+          enable: false,
+          config: {},
+        },
         cssModules: {
           enable: false,
           config: {

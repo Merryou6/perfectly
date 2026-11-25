@@ -68,9 +68,27 @@
 
 .detail-date {
   display: block;
-  margin: 28px 0 14px;
+  margin: 28px 0 8px;
   color: #7d8882;
   font-size: 12px;
+}
+
+.detail-context {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 18px;
+  color: #69766f;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.detail-context__community {
+  color: #1f6b57;
+}
+
+.detail-context__divider {
+  color: #a4aca7;
 }
 
 .detail-title {

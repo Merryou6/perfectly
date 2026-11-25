@@ -34,7 +34,7 @@ export class PostsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   create(@CurrentUser() user: AuthUser, @Body() dto: CreatePostDto) {
-    return this.postsService.create(user.sub, dto);
+    return this.postsService.create(user.sub, user, dto);
   }
 
   @Patch(":id")

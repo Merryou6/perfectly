@@ -1,10 +1,11 @@
 import { createParamDecorator, type ExecutionContext } from "@nestjs/common";
+import type { UserRole } from "@perfectly/contracts";
 import type { Request } from "express";
 
 export interface AuthUser {
   sub: number;
   username: string;
-  role: "USER" | "ADMIN";
+  role: UserRole;
 }
 
 export const CurrentUser = createParamDecorator(

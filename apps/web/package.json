@@ -13,6 +13,7 @@
     "maintained node versions"
   ],
   "dependencies": {
+    "@perfectly/contracts": "workspace:*",
     "@babel/runtime": "7.28.4",
     "@tarojs/components": "4.3.3",
     "@tarojs/helper": "4.3.3",

@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -19,6 +19,31 @@ enum UserStatus {
   DELETED
 }
 
+enum CommunityStatus {
+  NORMAL
+  FROZEN
+  ARCHIVED
+}
+
+enum CommunityMemberRole {
+  ADMIN
+  MEMBER
+}
+
+enum CommunityMemberStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  LEFT
+}
+
+enum JoinRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
 enum PostStatus {
   PENDING
   PUBLISHED
@@ -26,33 +51,162 @@ enum PostStatus {
   DELETED
 }
 
+enum PageVersionStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 model User {
-  id           Int        @id @default(autoincrement())
-  username     String     @unique @db.VarChar(32)
-  passwordHash String     @map("password_hash") @db.VarChar(100)
-  displayName  String     @map("display_name") @db.VarChar(32)
-  avatarUrl    String?    @map("avatar_url") @db.VarChar(255)
-  role         UserRole   @default(USER)
-  status       UserStatus @default(ACTIVE)
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
-  posts        Post[]
+  id                   Int                    @id @default(autoincrement())
+  username             String                 @unique @db.VarChar(32)
+  passwordHash         String                 @map("password_hash") @db.VarChar(100)
+  displayName          String                 @map("display_name") @db.VarChar(32)
+  avatarUrl            String?                @map("avatar_url") @db.VarChar(255)
+  role                 UserRole               @default(USER)
+  status               UserStatus             @default(ACTIVE)
+  createdAt            DateTime               @default(now()) @map("created_at")
+  updatedAt            DateTime               @updatedAt @map("updated_at")
+  posts                Post[]
+  ownedCommunities     Community[]            @relation("CommunityOwner")
+  memberships          CommunityMember[]
+  joinRequests         CommunityJoinRequest[] @relation("JoinRequester")
+  reviewedJoinRequests CommunityJoinRequest[] @relation("JoinReviewer")
+  pageVersions         CommunityPageVersion[]
 
   @@index([status])
-  @@map("users")
+  @@map("user")
+}
+
+model Community {
+  id                   Int                    @id @default(autoincrement())
+  name                 String                 @db.VarChar(40)
+  slug                 String                 @unique @db.VarChar(64)
+  description          String                 @default("") @db.VarChar(255)
+  ownerId              Int                    @map("owner_id")
+  joinApprovalRequired Boolean                @default(false) @map("join_approval_required")
+  memberPostingOnly    Boolean                @default(true) @map("member_posting_only")
+  status               CommunityStatus        @default(NORMAL)
+  createdAt            DateTime               @default(now()) @map("created_at")
+  updatedAt            DateTime               @updatedAt @map("updated_at")
+  owner                User                   @relation("CommunityOwner", fields: [ownerId], references: [id])
+  sections             Section[]
+  members              CommunityMember[]
+  joinRequests         CommunityJoinRequest[]
+  posts                Post[]
+  pages                CommunityPage[]
+
+  @@index([status, createdAt])
+  @@map("community")
+}
+
+model CommunityMember {
+  id          Int                   @id @default(autoincrement())
+  communityId Int                   @map("community_id")
+  userId      Int                   @map("user_id")
+  role        CommunityMemberRole   @default(MEMBER)
+  status      CommunityMemberStatus @default(PENDING)
+  joinedAt    DateTime?             @map("joined_at")
+  createdAt   DateTime              @default(now()) @map("created_at")
+  updatedAt   DateTime              @updatedAt @map("updated_at")
+  community   Community             @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user        User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([communityId, userId])
+  @@index([communityId, status])
+  @@map("community_member")
+}
+
+model CommunityJoinRequest {
+  id          Int               @id @default(autoincrement())
+  communityId Int               @map("community_id")
+  userId      Int               @map("user_id")
+  status      JoinRequestStatus @default(PENDING)
+  reason      String?           @db.VarChar(255)
+  reviewerId  Int?              @map("reviewer_id")
+  reviewedAt  DateTime?         @map("reviewed_at")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+  community   Community         @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user        User              @relation("JoinRequester", fields: [userId], references: [id], onDelete: Cascade)
+  reviewer    User?             @relation("JoinReviewer", fields: [reviewerId], references: [id])
+
+  @@index([communityId, status, createdAt])
+  @@index([userId, status])
+  @@map("community_join_request")
+}
+
+model Section {
+  id           Int       @id @default(autoincrement())
+  communityId  Int       @map("community_id")
+  name         String    @db.VarChar(40)
+  sortOrder    Int       @default(0) @map("sort_order")
+  postingRules Json?     @map("posting_rules")
+  status       String    @default("NORMAL") @db.VarChar(16)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  community    Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  posts        Post[]
+
+  @@index([communityId, sortOrder])
+  @@map("section")
 }
 
 model Post {
-  id        Int        @id @default(autoincrement())
-  authorId  Int        @map("author_id")
-  title     String?    @db.VarChar(100)
-  content   String     @db.Text
-  status    PostStatus @default(PUBLISHED)
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  id          Int        @id @default(autoincrement())
+  communityId Int        @map("community_id")
+  sectionId   Int        @map("section_id")
+  authorId    Int        @map("author_id")
+  title       String?    @db.VarChar(100)
+  body        String?    @db.Text
+  postType    String     @default("NORMAL") @map("post_type") @db.VarChar(16)
+  status      PostStatus @default(PUBLISHED)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  community   Community  @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  section     Section    @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 
-  @@index([status, createdAt])
+  @@index([communityId, status, createdAt])
+  @@index([sectionId, status, createdAt])
   @@index([authorId, createdAt])
-  @@map("posts")
+  @@map("post")
+}
+
+model CommunityPage {
+  id               Int                    @id @default(autoincrement())
+  communityId      Int                    @map("community_id")
+  pageKey          String                 @default("home") @map("page_key") @db.VarChar(32)
+  draftSchema      Json?                  @map("draft_schema")
+  currentVersionId Int?                   @unique @map("current_version_id")
+  createdAt        DateTime               @default(now()) @map("created_at")
+  updatedAt        DateTime               @updatedAt @map("updated_at")
+  community        Community              @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  currentVersion   CommunityPageVersion?  @relation("CurrentPageVersion", fields: [currentVersionId], references: [id], onDelete: SetNull)
+  versions         CommunityPageVersion[] @relation("PageVersions")
+
+  @@unique([communityId, pageKey])
+  @@index([currentVersionId])
+  @@map("community_page")
+}
+
+model CommunityPageVersion {
+  id            Int               @id @default(autoincrement())
+  pageId        Int               @map("page_id")
+  versionNo     Int               @map("version_no")
+  schemaJson    Json              @map("schema_json")
+  promptText    String?           @map("prompt_text") @db.VarChar(500)
+  changeSummary String?           @map("change_summary") @db.VarChar(255)
+  status        PageVersionStatus @default(DRAFT)
+  createdById   Int               @map("created_by_id")
+  publishedAt   DateTime?         @map("published_at")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  page          CommunityPage     @relation("PageVersions", fields: [pageId], references: [id], onDelete: Cascade)
+  createdBy     User              @relation(fields: [createdById], references: [id])
+  currentFor    CommunityPage?    @relation("CurrentPageVersion")
+
+  @@unique([pageId, versionNo])
+  @@index([pageId, status, createdAt])
+  @@map("community_page_version")
 }

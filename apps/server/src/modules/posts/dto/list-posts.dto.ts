@@ -1,17 +1,17 @@
 import { Type } from "class-transformer";
-import { IsInt, IsOptional, Max, Min } from "class-validator";
+import { IsInt, IsOptional, Min } from "class-validator";
+import { PaginationQueryDto } from "../../../common/dto/pagination-query.dto";
 
-export class ListPostsDto {
+export class ListPostsDto extends PaginationQueryDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  page?: number;
+  communityId?: number;
 
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(50)
-  pageSize?: number;
+  sectionId?: number;
 }

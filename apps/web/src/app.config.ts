@@ -4,6 +4,7 @@ export default defineAppConfig({
     "pages/login/index",
     "pages/publish/index",
     "pages/post-detail/index",
+    "pages/card-editor/index",
   ],
   window: {
     navigationBarBackgroundColor: "#F4F7F5",

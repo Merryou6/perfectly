@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import Taro from "@tarojs/taro";
 import { Input, Text, View } from "@tarojs/components";
-import { Aperture, ArrowLeft, LoaderCircle, LockKeyhole, UserRound } from "lucide-react";
+import {
+  ArrowLeft,
+  LoaderCircle,
+  LockKeyhole,
+  MessageSquare,
+  UserRound,
+} from "lucide-react";
 import { request } from "@/services/request";
 import { useAuthStore } from "@/store/auth";
-import type { User } from "@/types";
+import type { AuthSession } from "@/types";
 import "./index.css";
-
-interface AuthResult {
-  token: string;
-  expiresIn: number;
-  user: User;
-}
 
 export default function LoginPage() {
   const { token, setSession } = useAuthStore();
@@ -48,7 +48,7 @@ export default function LoginPage() {
     setSubmitting(true);
     setError("");
     try {
-      const result = await request<AuthResult>({
+      const result = await request<AuthSession>({
         path: `/auth/${mode}`,
         method: "POST",
         data:
@@ -82,22 +82,22 @@ export default function LoginPage() {
           <ArrowLeft size={18} />
         </button>
         <View className="auth-brand">
-          <Aperture size={18} />
-          <Text>片刻</Text>
+          <MessageSquare size={18} />
+          <Text>Perfectly</Text>
         </View>
       </View>
 
       <View className="auth-layout">
         <View className="auth-statement">
-          <Text className="auth-statement__eyebrow">A QUIET PLACE FOR MOMENTS</Text>
+          <Text className="auth-statement__eyebrow">A SHARED PLACE FOR IDEAS</Text>
           <Text className="auth-statement__title">
-            把日常放回日常，
+            进入同一个社区，
             <br />
-            让值得记住的事慢一点。
+            让不同的表达彼此遇见。
           </Text>
           <View className="auth-statement__line" />
           <Text className="auth-statement__copy">
-            文字、照片和视频，都可以成为生活的注脚。这里没有催促，只有你愿意留下的片刻。
+            浏览公开帖子，加入感兴趣的社区，再分享你的文字、照片和视频。
           </Text>
         </View>
 
@@ -131,8 +131,8 @@ export default function LoginPage() {
             </Text>
             <Text className="auth-heading__copy">
               {mode === "login"
-                ? "继续记录你没有说完的故事。"
-                : "从一条简短的动态开始，留下你的片刻。"}
+                ? "继续回到你参与的社区。"
+                : "注册后即可加入社区并参与讨论。"}
             </Text>
           </View>
 
@@ -191,7 +191,7 @@ export default function LoginPage() {
               disabled={submitting}
             >
               {submitting ? <LoaderCircle className="spin" size={17} /> : null}
-              {submitting ? "请稍候" : mode === "login" ? "进入片刻" : "创建账号"}
+              {submitting ? "请稍候" : mode === "login" ? "登录" : "创建账号"}
             </button>
 
             <button type="button" className="text-button auth-demo" onClick={fillDemo}>

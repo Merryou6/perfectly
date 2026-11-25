@@ -2,10 +2,13 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { AuthModule } from "./modules/auth/auth.module";
+import { CommunityModule } from "./modules/community/community.module";
+import { CommunityPageModule } from "./modules/community-page/community-page.module";
 import { HealthController } from "./modules/health/health.controller";
 import { PostsModule } from "./modules/posts/posts.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { HttpExceptionFilter } from "./common/http-exception.filter";
+import { PermissionModule } from "./common/permissions/permission.module";
 import { ResponseInterceptor } from "./common/response.interceptor";
 
 @Module({
@@ -15,7 +18,10 @@ import { ResponseInterceptor } from "./common/response.interceptor";
       envFilePath: ["../../.env", ".env"],
     }),
     PrismaModule,
+    PermissionModule,
     AuthModule,
+    CommunityModule,
+    CommunityPageModule,
     PostsModule,
   ],
   controllers: [HealthController],

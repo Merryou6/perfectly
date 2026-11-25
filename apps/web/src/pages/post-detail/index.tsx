@@ -20,7 +20,7 @@ export default function PostDetailPage() {
 
   const loadPost = async () => {
     if (!Number.isFinite(id)) {
-      setError("动态不存在");
+      setError("帖子不存在");
       setLoading(false);
       return;
     }
@@ -30,7 +30,7 @@ export default function PostDetailPage() {
       const result = await request<Post>({ path: `/posts/${id}` });
       setPost(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "动态加载失败");
+      setError(err instanceof Error ? err.message : "帖子加载失败");
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ export default function PostDetailPage() {
   const removePost = async () => {
     if (!post) return;
     const result = await Taro.showModal({
-      title: "删除动态",
+      title: "删除帖子",
       content: "删除后无法恢复，确定继续吗？",
       confirmText: "删除",
       confirmColor: "#B94D31",
@@ -63,7 +63,7 @@ export default function PostDetailPage() {
         method: "DELETE",
         auth: true,
       });
-      Taro.showToast({ title: "动态已删除", icon: "none" });
+      Taro.showToast({ title: "帖子已删除", icon: "none" });
       Taro.redirectTo({ url: "/pages/feed/index" });
     } catch (err) {
       Taro.showToast({
@@ -81,14 +81,14 @@ export default function PostDetailPage() {
         <button type="button" className="icon-button" onClick={goBack} aria-label="返回">
           <ArrowLeft size={18} />
         </button>
-        <Text className="detail-topbar__title">动态详情</Text>
+        <Text className="detail-topbar__title">帖子详情</Text>
         {post && user?.id === post.author.id ? (
           <View className="detail-actions">
             <button
               type="button"
               className="icon-button"
               onClick={() => Taro.navigateTo({ url: `/pages/publish/index?id=${post.id}` })}
-              aria-label="编辑动态"
+              aria-label="编辑帖子"
             >
               <Pencil size={17} />
             </button>
@@ -97,7 +97,7 @@ export default function PostDetailPage() {
               className="icon-button detail-delete"
               onClick={removePost}
               disabled={deleting}
-              aria-label="删除动态"
+              aria-label="删除帖子"
             >
               <Trash2 size={17} />
             </button>
@@ -111,11 +111,11 @@ export default function PostDetailPage() {
         {loading ? (
           <View className="detail-state">
             <LoaderCircle className="spin" size={24} />
-            <Text>正在打开这条动态</Text>
+            <Text>正在打开这篇帖子</Text>
           </View>
         ) : error || !post ? (
           <View className="detail-state">
-            <Text className="detail-state__title">没有找到这条动态</Text>
+            <Text className="detail-state__title">没有找到这篇帖子</Text>
             <Text className="detail-state__copy">{error || "它可能已经被删除"}</Text>
             <button type="button" className="secondary-button" onClick={loadPost}>
               <RotateCcw size={16} />
@@ -133,12 +133,17 @@ export default function PostDetailPage() {
             </View>
 
             <Text className="detail-date">{fullDate(post.createdAt)}</Text>
+            <View className="detail-context">
+              <Text className="detail-context__community">{post.community.name}</Text>
+              <Text className="detail-context__divider">/</Text>
+              <Text>{post.section.name}</Text>
+            </View>
             {post.title ? <Text className="detail-title">{post.title}</Text> : null}
-            <Text className="detail-content">{post.content}</Text>
+            <Text className="detail-content">{post.body}</Text>
 
             <View className="detail-end">
               <View className="detail-end__line" />
-              <Text>END OF MOMENT</Text>
+              <Text>END OF POST</Text>
               <View className="detail-end__line" />
             </View>
           </View>

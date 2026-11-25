@@ -1,6 +1,6 @@
 import Taro from "@tarojs/taro";
 import { Text, View } from "@tarojs/components";
-import { Aperture, LogIn, LogOut, PenLine } from "lucide-react";
+import { LogIn, LogOut, MessageSquare, PenLine } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { Avatar } from "./Avatar";
 import "./AppHeader.css";
@@ -30,11 +30,11 @@ export function AppHeader() {
       <View className="app-header__inner">
         <View className="brand" onClick={openHome}>
           <View className="brand__mark">
-            <Aperture size={19} strokeWidth={2.2} />
+            <MessageSquare size={19} strokeWidth={2.2} />
           </View>
           <View className="brand__copy">
-            <Text className="brand__name">片刻</Text>
-            <Text className="brand__label">MOMENTS</Text>
+            <Text className="brand__name">Perfectly</Text>
+            <Text className="brand__label">COMMUNITY</Text>
           </View>
         </View>
 
@@ -45,7 +45,7 @@ export function AppHeader() {
             onClick={openPublish}
           >
             <PenLine size={16} />
-            发布动态
+            发布帖子
           </button>
           {user ? (
             <View className="app-header__user">

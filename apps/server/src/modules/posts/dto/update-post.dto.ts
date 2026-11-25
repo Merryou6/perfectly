@@ -9,6 +9,6 @@ export class UpdatePostDto {
   @IsOptional()
   @IsString()
   @MinLength(1)
-  @MaxLength(2000)
-  content?: string;
+  @MaxLength(20000)
+  body?: string;
 }

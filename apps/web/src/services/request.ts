@@ -10,7 +10,7 @@ export const USER_KEY = "perfectly_user";
 
 interface RequestOptions {
   path: string;
-  method?: "GET" | "POST" | "PATCH" | "DELETE";
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   data?: unknown;
   auth?: boolean;
 }
