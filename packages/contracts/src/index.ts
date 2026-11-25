@@ -51,6 +51,16 @@ export interface AuthSession {
   user: User;
 }
 
+export interface UpdateProfileInput {
+  displayName?: string;
+  avatarUrl?: string | null;
+}
+
+export interface ChangePasswordInput {
+  oldPassword: string;
+  newPassword: string;
+}
+
 export interface SectionSummary {
   id: number;
   communityId: number;

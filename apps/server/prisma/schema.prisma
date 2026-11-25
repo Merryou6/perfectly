@@ -73,9 +73,22 @@ model User {
   joinRequests         CommunityJoinRequest[] @relation("JoinRequester")
   reviewedJoinRequests CommunityJoinRequest[] @relation("JoinReviewer")
   pageVersions         CommunityPageVersion[]
+  sessions             AuthSession[]
 
   @@index([status])
   @@map("user")
+}
+
+model AuthSession {
+  id        String    @id @db.VarChar(36)
+  userId    Int       @map("user_id")
+  expiresAt DateTime  @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt])
+  @@map("auth_session")
 }
 
 model Community {

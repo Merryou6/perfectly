@@ -1,12 +1,13 @@
 import Taro from "@tarojs/taro";
 import { Text, View } from "@tarojs/components";
 import { LogIn, LogOut, MessageSquare, PenLine } from "lucide-react";
+import { request } from "@/services/request";
 import { useAuthStore } from "@/store/auth";
 import { Avatar } from "./Avatar";
 import "./AppHeader.css";
 
 export function AppHeader() {
-  const { user, clearSession } = useAuthStore();
+  const { user, token, clearSession } = useAuthStore();
 
   const openHome = () => {
     Taro.reLaunch({ url: "/pages/feed/index" });
@@ -20,9 +21,21 @@ export function AppHeader() {
     Taro.navigateTo({ url: "/pages/login/index" });
   };
 
-  const logout = () => {
-    clearSession();
-    Taro.showToast({ title: "已退出登录", icon: "none" });
+  const logout = async () => {
+    try {
+      if (token) {
+        await request<null>({
+          path: "/auth/logout",
+          method: "POST",
+          auth: true,
+        });
+      }
+    } catch {
+      // Local session still needs to be cleared if the server is unavailable.
+    } finally {
+      clearSession();
+      Taro.showToast({ title: "已退出登录", icon: "none" });
+    }
   };
 
   return (
@@ -51,7 +64,12 @@ export function AppHeader() {
             <View className="app-header__user">
               <Avatar name={user.displayName} size="small" />
               <Text className="app-header__username">{user.displayName}</Text>
-              <button type="button" className="icon-button" onClick={logout} aria-label="退出登录">
+              <button
+                type="button"
+                className="icon-button"
+                onClick={() => void logout()}
+                aria-label="退出登录"
+              >
                 <LogOut size={17} />
               </button>
             </View>

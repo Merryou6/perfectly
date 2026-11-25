@@ -57,6 +57,36 @@ Authorization: Bearer <token>
 
 获取当前登录用户。
 
+### `POST /auth/logout`
+
+需要登录。撤销当前 `auth_session`，该令牌不能再次使用。
+
+## 用户资料
+
+### `PATCH /users/me`
+
+需要登录。修改昵称或头像地址，至少提交一个字段。
+
+```json
+{
+  "displayName": "新昵称",
+  "avatarUrl": null
+}
+```
+
+### `PATCH /users/me/password`
+
+需要登录。修改成功后，该用户所有旧令牌立即失效，并返回新的登录会话。
+
+```json
+{
+  "oldPassword": "demo12345",
+  "newPassword": "demo12345Z"
+}
+```
+
+密码长度为 8–72 个字符，并且至少包含小写字母、大写字母、数字、特殊符号中的两类。
+
 ## 社区
 
 ### `GET /communities?page=1&pageSize=20`
